@@ -3,13 +3,13 @@ require("dotenv").config();
 const { Client, WebhookClient } = require('discord.js');
 
 const client = new Client({
-  partials: ['MESSAGE', 'REACTION']
+  partials: ['Message', 'Reaction']
 });
 
-const webhookClient = new WebhookClient(
-  process.env.WEBHOOK_ID,
-  process.env.WEBHOOK_TOKEN,
-);
+const webhookClient = new WebhookClient({
+  id: process.env.WEBHOOK_ID,
+ token: process.env.WEBHOOK_TOKEN,
+  });
 
 const PREFIX = "$";
 
@@ -25,7 +25,7 @@ client.on('message', async (message) => {
       .substring(PREFIX.length)
       .split(/\s+/);
     if (CMD_NAME === 'kick') {
-      if (!message.member.hasPermission('KICK_MEMBERS'))
+      if (!message.member.permissions.has('KickMembers'))
         return message.reply('You do not have permissions to use that command');
       if (args.length === 0)
         return message.reply('Please provide an ID');
@@ -39,7 +39,7 @@ client.on('message', async (message) => {
         message.channel.send('That member was not found');
       }
     } else if (CMD_NAME === 'ban') {
-      if (!message.member.hasPermission('BAN_MEMBERS'))
+      if (!message.member.permissions.has('BanMembers'))
         return message.reply("You do not have permissions to use that command");
       if (args.length === 0) return message.reply("Please provide an ID");
       try {
